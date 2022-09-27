@@ -58,9 +58,7 @@ You might not have used Kitsu before but I suggest enabling this option anyway. 
 
 A [user script manager](#user-script-managers---getting-started) must first be added to your browser if you haven't already. Then install the script from one of these:
 
-- [OpenUserJS](https://openuserjs.org/scripts/mysticflute/AniList_Unlimited_-_Score_in_Header)
-- [GreasyFork](https://greasyfork.org/en/scripts/404465-anilist-unlimited-score-in-header)
-- [Github](https://github.com/mysticflute/ani-list-unlimited/raw/master/score-in-header.user.js)
+- [Github](https://github.com/CubeSkyy/ani-list-unlimited/raw/master/score-in-header.user.js)
 
 ### Screenshots
 
