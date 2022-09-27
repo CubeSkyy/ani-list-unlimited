@@ -635,41 +635,49 @@
       }
 
 
-
-      var animes = document.getElementsByClassName("results cover")[0].children;
+      var animes = document.getElementsByClassName("results");
       await utils.waitForElement(".percentage", animes[0]);
-      for (var i = 0; i < animes.length; i++) {
-          if(animes.item(i).querySelector(".scoreOverlay")){
-              continue;
+
+      for (let item of animes) {
+          var res = item.children;
+          for (var i = 0; i < res.length; i++) {
+
+              if(res.item(i).querySelector(".scoreOverlay")){
+                  continue;
+              }
+
+              if(!res.item(i).querySelector(".cover")){
+                  continue;
+              }
+
+              var score = res.item(i).querySelector(".percentage").innerText;
+              utils.debug(score);
+              let container = res.item(i).querySelector(".cover");
+
+              var newElement = document.createElement("div");
+              newElement.style.position = "absolute";
+              newElement.style.left = "64%";
+              newElement.style.top = "0px";
+              const scoreEl = document.createElement('span');
+
+
+              scoreEl.style.color = "rgb(11,12,34)";
+              scoreEl.style.fontWeight = 'bold';
+              scoreEl.style.backgroundColor = "rgba(255,255,255,0.8)";
+              scoreEl.style.fontSize = "1.8em";
+              scoreEl.style.paddingLeft = "5px";
+              scoreEl.style.paddingRight = "15px";
+              scoreEl.style.paddingTop = "5px";
+              scoreEl.style.display = "inline-block";
+
+              scoreEl.classList.add("scoreOverlay");
+              scoreEl.append(document.createTextNode(score));
+              newElement.appendChild(scoreEl);
+
+              container.appendChild(newElement);
+              //container.replaceWith(newSlotEl);
+
           }
-
-         var score = animes.item(i).querySelector(".percentage").innerText;
-         utils.debug(score);
-        let container = animes.item(i).querySelector(".cover");
-
-        var newElement = document.createElement("div");
-        newElement.style.position = "absolute";
-        newElement.style.left = "64%";
-        newElement.style.top = "0px";
-        const scoreEl = document.createElement('span');
-
-
-        scoreEl.style.color = "rgb(11,12,34)";
-        scoreEl.style.fontWeight = 'bold';
-        scoreEl.style.backgroundColor = "rgba(255,255,255,0.8)";
-        scoreEl.style.fontSize = "1.8em";
-        scoreEl.style.paddingLeft = "5px";
-        scoreEl.style.paddingRight = "15px";
-        scoreEl.style.paddingTop = "5px";
-        scoreEl.style.display = "inline-block";
-
-        scoreEl.classList.add("scoreOverlay");
-        scoreEl.append(document.createTextNode(score));
-        newElement.appendChild(scoreEl);
-
-        container.appendChild(newElement);
-        //container.replaceWith(newSlotEl);
-
       }
     }
 
