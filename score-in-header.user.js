@@ -119,7 +119,7 @@
       '(this content was added by the ani-list-unlimited user script)',
 
     /** When true, output additional logs to the console */
-    DEBUG: true,
+    DEBUG: false,
   };
 
   /**
@@ -646,7 +646,7 @@
                   continue;
               }
 
-              if(!res.item(i).querySelector(".cover")){
+              if(!res.item(i).querySelector(".percentage")){
                   continue;
               }
 
