@@ -105,6 +105,9 @@
     /** Regex to extract the page type and media id from a AniList url path */
     ANI_LIST_URL_PATH_REGEX: /(anime|manga)\/([0-9]+)/i,
 
+    /** Regex to extract the page type and media id from a AniList url path */
+    ANI_LIST_SEARCH_URL_PATH_REGEX: /search\/anime/i,
+
     /** Prefix message for logs to the console */
     LOG_PREFIX: '[AniList Unlimited User Script]',
 
@@ -116,7 +119,7 @@
       '(this content was added by the ani-list-unlimited user script)',
 
     /** When true, output additional logs to the console */
-    DEBUG: false,
+    DEBUG: true,
   };
 
   /**
@@ -538,6 +541,7 @@
 
       this.config = config;
       this.lastCheckedUrlPath = null;
+      this.lastCheckedUrlPath2 = null;
     }
 
     /**
@@ -545,8 +549,12 @@
      */
     initialize() {
       utils.debug('initializing page');
+
       this.applyPageModifications().catch(e =>
         utils.error(`Unable to apply modifications to the page - ${e.message}`)
+      );
+      this.applySearchPageModifications().catch(e =>
+        utils.error(`Unable to apply search modifications to the page - ${e.message}`)
       );
 
       // eslint-disable-next-line no-unused-vars
@@ -559,9 +567,21 @@
         );
       });
 
+     const observer2 = new MutationObserver((mutations, observer) => {
+        utils.debug('mutation observer2', mutations);
+        this.applySearchPageModifications().catch(e =>
+          utils.error(
+            `Unable to apply search modifications to the page - ${e.message}`
+          )
+        );
+      });
+
       const target = document.querySelector(this.selectors.pageTitle);
       observer.observe(target, { childList: true, characterData: true });
+      observer2.observe(target, { childList: true, characterData: true });
     }
+
+
 
     /**
      * Applies modifications to the page based on config settings.
@@ -600,6 +620,56 @@
 
       if (this.config.addKitsuScoreToHeader) {
         this.addKitsuScoreToHeader(pageType, mediaId, aniListData);
+      }
+    }
+
+
+    async applySearchPageModifications() {
+      const pathname = window.location.pathname;
+      utils.debug('SEARCH: checking page url', pathname);
+
+      const matches = constants.ANI_LIST_SEARCH_URL_PATH_REGEX.exec(pathname);
+      if (!matches) {
+        utils.debug('SEARCH: search url did not match');
+        return;
+      }
+
+
+
+      var animes = document.getElementsByClassName("results cover")[0].children;
+      await utils.waitForElement(".percentage", animes[0]);
+      for (var i = 0; i < animes.length; i++) {
+          if(animes.item(i).querySelector(".scoreOverlay")){
+              continue;
+          }
+
+         var score = animes.item(i).querySelector(".percentage").innerText;
+         utils.debug(score);
+        let container = animes.item(i).querySelector(".cover");
+
+        var newElement = document.createElement("div");
+        newElement.style.position = "absolute";
+        newElement.style.left = "64%";
+        newElement.style.top = "0px";
+        const scoreEl = document.createElement('span');
+
+
+        scoreEl.style.color = "rgb(11,12,34)";
+        scoreEl.style.fontWeight = 'bold';
+        scoreEl.style.backgroundColor = "rgba(255,255,255,0.8)";
+        scoreEl.style.fontSize = "1.8em";
+        scoreEl.style.paddingLeft = "5px";
+        scoreEl.style.paddingRight = "15px";
+        scoreEl.style.paddingTop = "5px";
+        scoreEl.style.display = "inline-block";
+
+        scoreEl.classList.add("scoreOverlay");
+        scoreEl.append(document.createTextNode(score));
+        newElement.appendChild(scoreEl);
+
+        container.appendChild(newElement);
+        //container.replaceWith(newSlotEl);
+
       }
     }
 
