@@ -1,3 +1,10 @@
+
+Adds Anilist score to the card of each anime when using the search or seasonal anime feature:
+
+![image](https://user-images.githubusercontent.com/16226383/207709265-0d4035ec-6247-4c0c-bfc2-ddff7307bc4c.png)
+
+Below is the original read me:
+
 AniList Unlimited
 =================
 
